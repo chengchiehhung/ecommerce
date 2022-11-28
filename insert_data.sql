@@ -39,8 +39,8 @@ INSERT INTO product_category (name, description) VALUES ("holiday stuff", "Chris
 
 -- product_inventory data
 INSERT INTO product_inventory (quantity, status) VALUES ("50", "in stock");
-INSERT INTO product_inventory (quantity, stutas) VALUES ("18", "in stock");
-INSERT INTO product_inventory (quantity, stutas) VALUES ("0", "out of stock");
+INSERT INTO product_inventory (quantity, status) VALUES ("18", "in stock");
+INSERT INTO product_inventory (quantity, status) VALUES ("0", "out of stock");
 
 -- product data
 INSERT INTO product (name, description, category_id, inventory_id, price)

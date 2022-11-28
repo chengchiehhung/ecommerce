@@ -59,8 +59,7 @@ CREATE TABLE `region` (
 CREATE TABLE `order_details` (
 	`product_id` INT NOT NULL,
 	`order_id` INT NOT NULL,
-	`quantity` INT NOT NULL,
-	PRIMARY KEY (`product_id`)
+	`quantity` INT NOT NULL
 );
 
 CREATE TABLE `product` (
@@ -75,7 +74,7 @@ CREATE TABLE `product` (
 );
 
 CREATE TABLE `product_category` (
-	`id` INT NOT NULL,
+	`id` INT NOT NULL AUTO_INCREMENT,
 	`name` varchar(255) NOT NULL,
 	`description` varchar(255) NOT NULL,
 	PRIMARY KEY (`id`)
@@ -100,8 +99,8 @@ ALTER TABLE `region` ADD CONSTRAINT `region_fk0` FOREIGN KEY (`region_manager_id
 
 ALTER TABLE `order_details` ADD CONSTRAINT `order_details_fk0` FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`);
 
-ALTER TABLE `product` ADD CONSTRAINT `product_fk0` FOREIGN KEY (`id`) REFERENCES `order_details`(`product_id`);
+ALTER TABLE `order_details` ADD CONSTRAINT `order_details_fk1` FOREIGN KEY (`product_id`) REFERENCES `product`(`id`);
 
-ALTER TABLE `product` ADD CONSTRAINT `product_fk1` FOREIGN KEY (`category_id`) REFERENCES `product_category`(`id`);
+ALTER TABLE `product` ADD CONSTRAINT `product_fk0` FOREIGN KEY (`category_id`) REFERENCES `product_category`(`id`);
 
-ALTER TABLE `product` ADD CONSTRAINT `product_fk2` FOREIGN KEY (`inventory_id`) REFERENCES `product_inventory`(`id`);
+ALTER TABLE `product` ADD CONSTRAINT `product_fk1` FOREIGN KEY (`inventory_id`) REFERENCES `product_inventory`(`id`);
