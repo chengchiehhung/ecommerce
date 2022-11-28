@@ -1,5 +1,4 @@
 USE ecommerce;
-
 -- admins data
 INSERT INTO admins (username, password, first_name, last_name, permissions) VALUES ("thomas_h", "tspassword", "Thomas", "Hsieh", "Full");
 INSERT INTO admins (username, password, first_name, last_name, permissions) VALUES ("Rich_h", "rspassword", "Rick", "Hsu", "Manage");
@@ -33,8 +32,29 @@ INSERT INTO orders (customer_id, salesperson_id, status) VALUES (2, 1, "delivery
 INSERT INTO orders (customer_id, salesperson_id, status) VALUES (3, 2, "picked_up");
 INSERT INTO orders (customer_id, salesperson_id, status) VALUES (1, 5, "picked_up");
 
--- order_details data
-INSERT INTO order_details (product_id, order_id, quantity) VALUES ()
-
+-- product_category data
 INSERT INTO product_category (name, description) VALUES ("grocery", "daily stuff");
+INSERT INTO product_category (name, description) VALUES ("clothing", "for waering");
+INSERT INTO product_category (name, description) VALUES ("holiday stuff", "Christmas is comimg");
 
+-- product_inventory data
+INSERT INTO product_inventory (quantity, status) VALUES ("50", "in stock");
+INSERT INTO product_inventory (quantity, stutas) VALUES ("18", "in stock");
+INSERT INTO product_inventory (quantity, stutas) VALUES ("0", "out of stock");
+
+-- product data
+INSERT INTO product (name, description, category_id, inventory_id, price)
+    VALUES ("apple", "a kind of fruit", "1", "1", "0.99");
+INSERT INTO product (name, description, category_id, inventory_id, price)
+    VALUES ("hoodie", "a kind of sweatshirt with hood", "2", "2", "29.99");
+INSERT INTO product (name, description, category_id, inventory_id, price)
+    VALUES ("Christmas tree", "stuff for Christmas", "3", "3", "99.99");
+
+-- order_details data
+INSERT INTO order_details (product_id, order_id, quantity) VALUES (2, 1, 1);
+INSERT INTO order_details (product_id, order_id, quantity) VALUES (3, 1, 2);
+INSERT INTO order_details (product_id, order_id, quantity) VALUES (1, 2, 1);
+INSERT INTO order_details (product_id, order_id, quantity) VALUES (2, 3, 1);
+INSERT INTO order_details (product_id, order_id, quantity) VALUES (2, 4, 3);
+INSERT INTO order_details (product_id, order_id, quantity) VALUES (1, 4, 1);
+INSERT INTO order_details (product_id, order_id, quantity) VALUES (3, 1, 1);
