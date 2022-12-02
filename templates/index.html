@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        header{
+            display: block;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            color: #ffffff;
+            font-size: 2em;
+            font-weight: bold;
+            background-color: #223344;
+        }
+
+        #signup{
+            display: block;
+            margin: 25px;
+            height: 200px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        #signin{
+            display: block;
+            margin: 25px;
+            height: 200px;
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        form{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>Welcome AJS Ecommerce Platform</header>
+
+    <div id="signup">
+        <div>Register</div>
+        <form action="http://127.0.0.1:3000/signup" method="POST">
+            <div>Frist Name <input type="text" name="first_name"></div>
+            <div>Last Name <input type="text" name="last_name"></div>
+            <div>account <input type="text" name="account"></div>
+            <div>password <input type="password" name="password"></div>
+            <button>Register</button>
+        </form>
+    </div>
+
+    <div id="signin">
+        <div>Login</div>
+        <form action="http://127.0.0.1:3000/signin" method="POST">
+            <div>account <input type="text" name="account"></div>
+            <div>password <input type="password" name="password"></div>
+            <button>Login</button>
+        </form>
+    </div>
+
+</body>
+</html>

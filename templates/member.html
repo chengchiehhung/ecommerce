@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        header{
+            display: block;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            color: #ffffff;
+            font-size: 2em;
+            font-weight: bold;
+            background-color: #223344;
+        }
+
+        p{
+            display: block;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        form{
+            text-align: center;
+        }
+
+        #searchForm{
+            margin: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #updateForm{
+            margin: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #displayInfo{
+            text-align: center;
+        }
+
+        #displayInfo2{
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <header>Welcome, this is member page</header>
+    <p id="modify">{{name}}，Welcome to the store!</p>
+    <form action="http://127.0.0.1:3000/signout">
+        <button>Logout</button>
+    </form>
+
+    <div id="searchForm">
+        Products
+        <form>
+        <span><input type="text" name="username"></span>
+        <button>Search</button>
+        </form>
+    </div>
+
+    <div id="displayInfo"></div>
+
+    <div id="updateForm">
+        Orders History
+        <form>
+        <span><input type="text" name="username"></span>
+        <button>Search</button>
+        </form>
+    </div>
+
+    <div id="displayInfo2"></div>
+
+    <script>
+        // 撈取查詢會員姓名資料並顯示在網頁上
+        const form = document.querySelector('#searchForm');
+        form.addEventListener('submit', function(e){
+            e.preventDefault();
+            const searchTerm = form.firstElementChild.username.value;
+            fetch(`http://127.0.0.1:3000/api/users?username=${searchTerm}`)
+            .then(res => {
+                return res.json();
+            })
+            .then(data =>{
+                if(data['data']!==null){
+                    name = data['data']['name'];
+                    username = data['data']['username'];
+                    let objTo = document.querySelectorAll("#displayInfo");
+                    objTo[0].innerText = `${name} (${username})`;
+                }
+                else{
+                    let objTo = document.querySelectorAll("#displayInfo");
+                    objTo[0].innerText = "查無資料";
+                }
+            })
+        })
+
+        // 撈取更新會員姓名資料並更新網頁上的姓名
+        const formUpdate = document.querySelector('#updateForm');
+        formUpdate.addEventListener('submit', function(e){
+            e.preventDefault();
+            const updateTerm = formUpdate.firstElementChild.username.value;
+            fetch("http://127.0.0.1:3000/api/user",
+                    {
+                        "body": JSON.stringify({"name": updateTerm}),
+                        "headers": {"content-type": "application/json"},
+                        "method": "POST"
+                    }
+            )
+            .then(res => {
+                return res.json();
+            })
+            .then(data =>{
+                if(Object.keys(data)[0] === "ok"){
+                    const modifyName = document.querySelector('#modify');
+                    modifyName.innerText = `${updateTerm}，Welcome!`;
+                    let updateMessage = document.querySelector('#displayInfo2');
+                    updateMessage.innerText = "更新成功";
+                }
+                else{
+                    let updateMessage = document.querySelector('#displayInfo2');
+                    updateMessage.innerText = "更新失敗";
+                }
+            })
+        })
+    </script>
+</body>
+</html>
