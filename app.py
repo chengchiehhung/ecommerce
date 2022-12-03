@@ -72,22 +72,90 @@ def error():
     message = request.args.get("message", None)
     return render_template("error.html", message=message)
 
-
+@app.route("/purchase")
+def purchase():
+    username = request.args.get("username", None)
+    print(username)
+    return str(username)
 
 
 # APis
-@app.route("/get_customers")
-def get_customers():
-    query = '''
-        SELECT *
-        FROM ecommerce.customers;
-    '''
+@app.route("/api/products")
+def get_products():
+    keyword = request.args.get("keyword", None)
+    if keyword != None:
+        query = f'''
+            SELECT name, description, price, quantity
+            FROM ecommerce.product
+            INNER JOIN ecommerce.product_inventory
+            ON product_inventory.id = product.inventory_id
+            WHERE name LIKE '%{keyword}%';
+        '''
+    else:
+        query = '''
+            SELECT name, description, price, quantity
+            FROM ecommerce.product
+            INNER JOIN ecommerce.product_inventory
+            ON product_inventory.id = product.inventory_id;
+        '''
     mycursor.execute(query) #執行sql命令
     data = mycursor.fetchall()
-    data = {}
-    data["data"] = [d[1] for d in data]
-    # print(dic)
-    return data
+
+    result = {}
+    result["products"] = {"name": [d[0] for d in data], "description": [d[1] for d in data], "price": [d[2] for d in data], "quantity": [d[3] for d in data]}
+    return result
+
+@app.route("/api/order_history")
+def get_order_history():
+    username = request.args.get("username", None)
+    query1 = f"SELECT id FROM ecommerce.customers WHERE username = '{username}'"
+    mycursor.execute(query1)
+    data = mycursor.fetchall()
+    id = data[0][0]
+
+    query2 = f"SELECT COUNT(*) AS c FROM ecommerce.orders WHERE customer_id = {id}"
+    mycursor.execute(query2)
+    data = mycursor.fetchall()
+    total_order = data[0][0]
+
+    query3 = f'''SELECT name, product.created_at, orders.id FROM ecommerce.orders 
+                INNER JOIN ecommerce.order_details
+                ON order_details.order_id = orders.id
+                INNER JOIN ecommerce.product
+                ON order_details.product_id = product.id
+                WHERE customer_id = {id}
+                LIMIT 2;'''
+    mycursor.execute(query3)
+    data = mycursor.fetchall()
+    name = data[0][0]
+    time = data[0][1]
+    order_id = data[0][2]
+    name2 = data[1][0]
+    time2 = data[1][1]
+    order_id2 = data[1][2]
+
+    result = {}
+    result["data"] = {"total_order": total_order, "product_name": [name, name2], "time": [time, time2], "order_id": [order_id, order_id2]}
+
+    return result
+
+
+@app.route("/api/users")
+def api_users():
+    username = request.args.get("username", None)
+    query_get_userinfo = "SELECT * FROM ecommerce.customers WHERE username = (%s);"
+    mycursor.execute(query_get_userinfo, (username,))
+    user_info = mycursor.fetchall()
+
+    if user_info != []:
+        return jsonify({"data": {
+                                    "id": user_info[0][0],
+                                    "name": user_info[0][1],
+                                    "username": user_info[0][2]
+                                }
+                        })
+    else:
+        return jsonify({"data": None})
 
 @app.route("/get_orders", methods = ["GET"]) #Get request
 def orders():

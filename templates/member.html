@@ -79,54 +79,61 @@
     <div id="displayInfo2"></div>
 
     <script>
-        // 撈取查詢會員姓名資料並顯示在網頁上
+        // Fetch Current Products
         const form = document.querySelector('#searchForm');
+        const user_name = document.querySelector('#modify').childNodes[0].textContent;
         form.addEventListener('submit', function(e){
             e.preventDefault();
             const searchTerm = form.firstElementChild.username.value;
-            fetch(`http://127.0.0.1:3000/api/users?username=${searchTerm}`)
+            fetch(`http://127.0.0.1:3000/api/products?keyword=${searchTerm}`)
+            .then(res => {
+                return res.json();
+            })
+            .then(data =>{
+                if(data['products']!==null){
+                    products = data['products'];
+                    let objTo = document.querySelectorAll("#displayInfo");
+                    for(let i=0; i<products["name"].length; i++){
+                        objTo[0].innerHTML += `<html>Product ${i+1}: ${products["name"][i]}<br> Description: ${products["description"][i]}<br>
+                                                Price: ${products["price"][i]}<br> Stock: ${products["quantity"][i]}<br>
+                                                <form action="http://127.0.0.1:3000/purchase?username=${user_name}">
+                                                    <input type="submit" value="Purchase" />
+                                                </form>
+                                                
+                                                <br><br>
+                                                </html>`;
+                    }
+                }
+                else{
+                    let objTo = document.querySelectorAll("#displayInfo");
+                    objTo[0].innerText = "No data";
+                }
+            })
+        })
+
+        // Get history
+        const form_history = document.querySelector('#updateForm');
+        form_history.addEventListener('submit', function(e){
+            e.preventDefault();
+            const searchTerm = form_history.firstElementChild.username.value;
+            fetch(`http://127.0.0.1:3000/api/order_history?username=${searchTerm}`)
             .then(res => {
                 return res.json();
             })
             .then(data =>{
                 if(data['data']!==null){
-                    name = data['data']['name'];
-                    username = data['data']['username'];
-                    let objTo = document.querySelectorAll("#displayInfo");
-                    objTo[0].innerText = `${name} (${username})`;
-                }
-                else{
-                    let objTo = document.querySelectorAll("#displayInfo");
-                    objTo[0].innerText = "查無資料";
-                }
-            })
-        })
-
-        // 撈取更新會員姓名資料並更新網頁上的姓名
-        const formUpdate = document.querySelector('#updateForm');
-        formUpdate.addEventListener('submit', function(e){
-            e.preventDefault();
-            const updateTerm = formUpdate.firstElementChild.username.value;
-            fetch("http://127.0.0.1:3000/api/user",
-                    {
-                        "body": JSON.stringify({"name": updateTerm}),
-                        "headers": {"content-type": "application/json"},
-                        "method": "POST"
+                    total_order = data['data']['total_order'];
+                    product_name = data['data']['product_name'];
+                    buy_time = data['data']['buy_time'];
+                    order_id = data['data']['order_id'];
+                    let objTo = document.querySelectorAll("#displayInfo2");
+                    for(let i=0; i<product_name.length; i++){
+                    objTo[0].innerText += `Total orders: ${total_order}\n\n Order ${i+1}: Product name: ${product_name[i]}\n Date: ${buy_time}\n\n`;
                     }
-            )
-            .then(res => {
-                return res.json();
-            })
-            .then(data =>{
-                if(Object.keys(data)[0] === "ok"){
-                    const modifyName = document.querySelector('#modify');
-                    modifyName.innerText = `${updateTerm}，Welcome!`;
-                    let updateMessage = document.querySelector('#displayInfo2');
-                    updateMessage.innerText = "更新成功";
                 }
                 else{
-                    let updateMessage = document.querySelector('#displayInfo2');
-                    updateMessage.innerText = "更新失敗";
+                    let objTo = document.querySelectorAll("#displayInfo2");
+                    objTo[0].innerText = "No data";
                 }
             })
         })
